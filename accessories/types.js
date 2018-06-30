@@ -1,12 +1,12 @@
-var exports = module.exports = {};
+var exports = (module.exports = {});
 
 //HomeKit Types UUID's
 
 var stPre = "000000";
 var stPost = "-0000-1000-8000-0026BB765291";
 
-
 //HomeKitTransportCategoryTypes
+
 exports.OTHER_TCTYPE = 1;
 exports.FAN_TCTYPE = 3;
 exports.GARAGE_DOOR_OPENER_TCTYPE = 4;
@@ -42,7 +42,6 @@ exports.HUMIDITY_SENSOR_STYPE = stPre + "82" + stPost;
 exports.TEMPERATURE_SENSOR_STYPE = stPre + "8A" + stPost;
 
 //HomeKitCharacteristicsTypes
-
 
 exports.ALARM_CURRENT_STATE_CTYPE = stPre + "66" + stPost;
 exports.ALARM_TARGET_STATE_CTYPE = stPre + "67" + stPost;
