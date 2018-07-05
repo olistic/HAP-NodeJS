@@ -6,21 +6,16 @@ const DEVICE_ID = "230032000a47343337373738";
 const particle = new Particle();
 
 class Gate {
-  getState() {
-    console.log("Getting the gate state...");
-
-    return particle
-      .getVariable({
-        deviceId: DEVICE_ID,
-        name: "state",
-        auth: PARTICLE_ACCESS_TOKEN
-      })
-      .then(data => data.body.result);
+  async getState() {
+    const data = await particle.getVariable({
+      deviceId: DEVICE_ID,
+      name: "state",
+      auth: PARTICLE_ACCESS_TOKEN
+    });
+    return data.body.result;
   }
 
   open() {
-    console.log("Opening the gate...");
-
     return particle.callFunction({
       deviceId: DEVICE_ID,
       name: "open",
@@ -29,8 +24,6 @@ class Gate {
   }
 
   close() {
-    console.log("Closing the gate...");
-
     return particle.callFunction({
       deviceId: DEVICE_ID,
       name: "close",

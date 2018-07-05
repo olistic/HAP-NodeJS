@@ -1,8 +1,12 @@
+require("console-stamp")(console, {
+  pattern: "yyyy-mm-dd HH:MM:ss.l",
+  label: false
+});
+
 const Accessory = require("../").Accessory;
 const Service = require("../").Service;
 const Characteristic = require("../").Characteristic;
 const uuid = require("../").uuid;
-
 const Gate = require("../controllers/Gate");
 
 // Create a new instance of a Particle controlled gate.
@@ -39,39 +43,37 @@ gateAccessory
     Characteristic.CurrentDoorState.CLOSED
   )
   .getCharacteristic(Characteristic.TargetDoorState)
-  .on("set", (value, callback) => {
+  .on("set", async (value, callback) => {
     if (value === Characteristic.TargetDoorState.OPEN) {
-      console.log("Open gate request");
-
-      gate
-        .open()
-        .then(() => {
-          gateAccessory
-            .getService(Service.GarageDoorOpener)
-            .setCharacteristic(
-              Characteristic.CurrentDoorState,
-              Characteristic.CurrentDoorState.OPEN
-            );
-
-          callback();
-        })
-        .catch(callback);
+      try {
+        await gate.open();
+        gateAccessory
+          .getService(Service.GarageDoorOpener)
+          .setCharacteristic(
+            Characteristic.CurrentDoorState,
+            Characteristic.CurrentDoorState.OPEN
+          );
+        callback();
+        console.info("Gate opened");
+      } catch (err) {
+        console.error(`Error when opening gate: ${err.message}`);
+        callback(err);
+      }
     } else if (value === Characteristic.TargetDoorState.CLOSED) {
-      console.log("Close gate request");
-
-      gate
-        .close()
-        .then(() => {
-          gateAccessory
-            .getService(Service.GarageDoorOpener)
-            .setCharacteristic(
-              Characteristic.CurrentDoorState,
-              Characteristic.CurrentDoorState.CLOSED
-            );
-
-          callback();
-        })
-        .catch(callback);
+      try {
+        await gate.close();
+        gateAccessory
+          .getService(Service.GarageDoorOpener)
+          .setCharacteristic(
+            Characteristic.CurrentDoorState,
+            Characteristic.CurrentDoorState.CLOSED
+          );
+        callback();
+        console.info("Gate closed");
+      } catch (err) {
+        console.error(`Error when closing gate: ${err.message}`);
+        callback(err);
+      }
     }
   });
 
@@ -97,11 +99,13 @@ function getCurrentDoorState(state) {
 gateAccessory
   .getService(Service.GarageDoorOpener)
   .getCharacteristic(Characteristic.CurrentDoorState)
-  .on("get", callback => {
-    console.log("Gate state request");
-
-    gate
-      .getState()
-      .then(state => callback(null, getCurrentDoorState(state)))
-      .catch(callback);
+  .on("get", async callback => {
+    try {
+      const state = await gate.getState();
+      const currentDoorState = getCurrentDoorState(state);
+      callback(null, currentDoorState);
+    } catch (err) {
+      console.error(`Error when getting door state: ${err.message}`);
+      callback(err);
+    }
   });
