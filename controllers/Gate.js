@@ -33,12 +33,14 @@ class Gate {
 }
 
 Gate.STATES = {
-  open: 0,
-  closed: 1,
-  opening: 2,
-  closing: 3,
-  stoppedOpening: 4,
-  stoppedClosing: 5
+  closed: 0,
+  opening: 1,
+  openLocked: 2,
+  open: 3,
+  closing: 4,
+  closedLocked: 5,
+  stoppedOpening: 6,
+  stoppedClosing: 7
 };
 
 exports = module.exports = Gate;
