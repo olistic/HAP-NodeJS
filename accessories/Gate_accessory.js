@@ -40,8 +40,8 @@ const gateService = gateAccessory.addService(Service.GarageDoorOpener, "Gate");
 
 // Force initial state to closed.
 gateService.setCharacteristic(
-  Characteristic.CurrentDoorState,
-  Characteristic.CurrentDoorState.CLOSED
+  Characteristic.TargetDoorState,
+  Characteristic.TargetDoorState.CLOSED
 );
 
 // Listen for "set" events from iOS.
